@@ -125,13 +125,13 @@ def config_over_socket(connection_data, root_pass, user_name, user_pass, silent)
         mgmt_ip_info[connection] = mgmt_ip
     return mgmt_ip_info
 
-def generate_ini_inventory(mgmt_ip_info, eve_lab_name):
+def generate_ini_inventory(mgmt_ip_info, eve_lab_name, user_name, user_pass):
     '''Generate INI Inventory file to be used by Ansible'''
     lab_name = eve_lab_name[:-4]
     with open('inventory', 'w') as inv_file:
         inv_file.write('[{0}-devices]\n'.format(lab_name.lower()))
         for device in mgmt_ip_info:
-            inv_file.write('{0} ansible_host={1}\n'.format(device.lower(), mgmt_ip_info[device]))
+            inv_file.write('{0} ansible_host={1} ansible_user={2} ansible_password={3} ansible_network_os=junos ansible_connection=netconf\n'.format(device.lower(), mgmt_ip_info[device], user_name, user_pass))
     return 'inventory'
 
 if __name__ == '__main__':
@@ -184,7 +184,7 @@ if __name__ == '__main__':
     node_json_formatted = json.dumps(node_data_json['data'], indent=2)
     connection_data = create_data_for_connections(node_data_json)
     mgmt_info = config_over_socket(connection_data, root_pass, user_name, user_pass, silent)
-    file_name = generate_ini_inventory(mgmt_info, eve_lab_name)
+    file_name = generate_ini_inventory(mgmt_info, eve_lab_name, user_name, user_pass)
     if silent == False:
         print(mgmt_info)
         print('The hosts have been put into an ini file type inventory called {0}'.format(file_name))

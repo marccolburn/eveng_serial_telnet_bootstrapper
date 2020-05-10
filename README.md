@@ -48,6 +48,7 @@ The python script expects a few arguments. It is built using the argparse python
 Example
 ---
 Python script execution example:
+
     python eveng_configure_nodes.py 10.1.99.138 BootStrapTesting.unl -u admin -p eve -r Password1 -U ansible -P Password1
     Connecting to device...
     Connected to vSRX1
